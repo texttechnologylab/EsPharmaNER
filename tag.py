@@ -1,5 +1,5 @@
 from flair.data import Span
-from flair.datasets import ColumnCorpus
+from flair.datasets import ColumnCorpus, DataLoader
 from flair.embeddings import *
 from flair.models import SequenceTagger
 
@@ -18,7 +18,8 @@ def process_file(tagger: SequenceTagger, file_path: Union[str, Path], out_path: 
             return 0
         if print_corpus is not None:
             results: List[Span] = []
-            result, loss = tagger.evaluate(corpus.train)
+            data_loader = DataLoader(corpus.get_all_sentences())
+            result, loss = tagger.evaluate(data_loader)
             print(result.detailed_results)
             if not os.path.isfile(print_corpus):
                 for sentence in corpus.train:
